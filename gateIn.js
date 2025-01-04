@@ -2,29 +2,7 @@ require("dotenv").config();
 const { default: axios } = require("axios");
 const { SerialPort, ReadlineParser } = require("serialport");
 
-const cardTypes = {
-  "01": "STI Luminos Card",
-  "02": "eMoney Mandiri Card",
-  "03": "Brizzi BRI Card",
-  "04": "Tapcash BNI Card",
-  "05": "Flazz BCA Card",
-  "06": "Jakcard DKI Card",
-  "07": "Bank Nobu Card",
-  "08": "Bank Mega Card",
-  FF: "Type A or Mifare Card",
-};
-
-const validityFlags = {
-  "00": "Card number is invalid",
-  "01": "Card number is valid, but card balance is invalid",
-  "02": "Card balance is valid, but card number is invalid",
-  "03": "Both card number and card balance is valid",
-};
-
-const INVALID_CARD = "00";
-const INVALID_BALANCE = "01";
-const INVALID_CARD_NUMBER = "02";
-const VALID = "03";
+const { cardTypes, VALID } = require("./constants");
 
 function parseData(data) {
   // 06 00 00 00 0F 01 5E B5 03 93 60 88 50 00 00 00 14 00 00 4D 7F
@@ -51,7 +29,7 @@ function parseData(data) {
   };
 }
 
-console.log(parseData("060000000F015EB503936088500000001400004D7F"));
+// console.log(parseData("060000000F015EB503936088500000001400004D7F"));
 
 const port = new SerialPort({
   path: process.env.SERIAL_PORT_IN || "/dev/ttyUSB0",
