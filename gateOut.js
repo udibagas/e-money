@@ -90,6 +90,8 @@ function checkBalance() {
       card.type = cardType;
       card.number = cardNumber;
       card.balance = balance;
+
+      console.log(card);
     });
   });
 }
@@ -141,18 +143,18 @@ function mainLoop() {
 
     checkBalance();
 
-    if (card.balance < amount) {
-      setDisplay("Saldo tidak mencukupi", "01", "03");
-      buzz(false);
-      return;
-    }
+    // if (card.balance < amount) {
+    //   setDisplay("Saldo tidak mencukupi", "01", "03");
+    //   buzz(false);
+    //   return;
+    // }
 
-    deduct(amount);
-    buzz();
-    setDisplay("Transaksi berhasil", "01", "04");
-    setDisplay(`Saldo: ${balance}`, "01", "01");
+    // deduct(amount);
+    // buzz();
+    // setDisplay("Transaksi berhasil", "01", "04");
+    // setDisplay(`Saldo: ${balance}`, "01", "01");
 
-    setTimeout(resetDisplay, 3000);
-    card.reset();
+    // setTimeout(resetDisplay, 3000);
+    // card.reset();
   }, 100);
 }
