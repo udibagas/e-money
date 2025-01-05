@@ -76,6 +76,7 @@ function checkBalance() {
     }
 
     parser.once("data", (data) => {
+      console.log("Data received: " + data);
       const statusCode = data.toString().slice(0, 8);
 
       if (statusCode != "00000000") {
