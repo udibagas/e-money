@@ -53,21 +53,33 @@ function init(callback) {
 
   port.write(data, (err) => {
     if (err) {
-      callback(`Failed to initialize device: ${err.message}`);
+      return callback(`Failed to initialize device: ${err.message}`);
     }
 
-    port.once("data", (data) => {
-      data = data.toString("hex");
-      console.log("Data received: " + data);
-      const statusCode = data.slice(2, 8);
-      const mid = data.slice(8);
+    let res = port.read();
+    res = res.toString("hex");
+    console.log("Data received: " + res);
+    const statusCode = res.slice(2, 8);
+    const mid = res.slice(8);
 
-      if (statusCode === "000000") {
-        callback(null, mid);
-      } else {
-        callback("Failed to initialize device. Incorrect key");
-      }
-    });
+    if (statusCode === "000000") {
+      callback(null, mid);
+    } else {
+      callback("Failed to initialize device. Incorrect key");
+    }
+
+    // port.once("data", (data) => {
+    //   data = data.toString("hex");
+    //   console.log("Data received: " + data);
+    //   const statusCode = data.slice(2, 8);
+    //   const mid = data.slice(8);
+
+    //   if (statusCode === "000000") {
+    //     callback(null, mid);
+    //   } else {
+    //     callback("Failed to initialize device. Incorrect key");
+    //   }
+    // });
   });
 }
 
