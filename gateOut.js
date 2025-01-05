@@ -57,6 +57,11 @@ function init(callback) {
     }
 
     let res = port.read();
+
+    if (res === null) {
+      return callback("Failed to initialize device. No data received");
+    }
+
     res = res.toString("hex");
     console.log("Data received: " + res);
     const statusCode = res.slice(2, 8);
