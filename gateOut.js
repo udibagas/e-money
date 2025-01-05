@@ -49,6 +49,7 @@ port.on("data", (data) => {
 function init(callback) {
   const { INIT_KEY } = process.env;
   const data = prepareData(`EF0101${INIT_KEY}`);
+  console.log("Data prepared: " + data.toString("hex"));
 
   port.write(data, (err) => {
     if (err) {
