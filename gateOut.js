@@ -29,22 +29,22 @@ port.on("open", () => {
 
 const parser = port.pipe(new ReadlineParser());
 
-// parser.on("data", (data) => {
-//   console.log("Data received: " + data);
+parser.on("data", (data) => {
+  console.log("Data received: " + data);
 
-//   const statusCode = data.slice(0, 6);
-//   const additionalData = data.slice(6);
-//   const statusMessage = statusCodes[statusCode] || "Unknown status code";
-//   console.log("Status code: " + statusCode);
+  // const statusCode = data.slice(0, 6);
+  // const additionalData = data.slice(6);
+  // const statusMessage = statusCodes[statusCode] || "Unknown status code";
+  // console.log("Status code: " + statusCode);
 
-//   if (statusCode === "000000") {
-//     console.log(statusMessage);
-//     buzz();
-//   } else {
-//     console.error(statusMessage);
-//     buzz(false);
-//   }
-// });
+  // if (statusCode === "000000") {
+  //   console.log(statusMessage);
+  //   buzz();
+  // } else {
+  //   console.error(statusMessage);
+  //   buzz(false);
+  // }
+});
 
 function init(callback) {
   const { INIT_KEY } = process.env;
