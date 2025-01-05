@@ -67,7 +67,7 @@ port.on("data", (data) => {
   data = data.toString("hex");
   console.log("Data received: " + data);
 
-  const [cardType, cardUID, cardDataValidityFlag, cardNumber, cardBalance] =
+  const { cardType, cardUID, cardDataValidityFlag, cardNumber, cardBalance } =
     parseData(data);
 
   console.log("Card Type: " + cardTypes[cardType]);
