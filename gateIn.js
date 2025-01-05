@@ -51,7 +51,20 @@ port.on("error", (error) => {
   console.error("Serial port error", error);
 });
 
-parser.on("data", (data) => {
+port.on("close", () => {
+  console.log("Serial port closed");
+});
+
+port.on("disconnect", () => {
+  console.log("Serial port disconnected");
+});
+
+port.on("end", () => {
+  console.log("Serial port ended");
+});
+
+port.on("data", (data) => {
+  data = data.toString("hex");
   console.log("Data received: " + data);
 
   const [cardType, cardUID, cardDataValidityFlag, cardNumber, cardBalance] =
@@ -62,19 +75,4 @@ parser.on("data", (data) => {
   console.log("Card Data Validity Flag: " + cardDataValidityFlag);
   console.log("Card Number: " + cardNumber);
   console.log("Card Balance: Rp. " + cardBalance.toLocaleString());
-
-  // todo: open gate
-  if (cardDataValidityFlag === VALID) {
-    console.log("Opening gate...");
-    // axios
-    //   .post(process.env.GATE_OUT_URL, {
-    //     cardNumber,
-    //   })
-    //   .then((response) => {
-    //     console.log("Gate opened");
-    //   })
-    //   .catch((error) => {
-    //     console.error("Failed to open gate");
-    //   });
-  }
 });
