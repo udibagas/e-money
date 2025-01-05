@@ -3,6 +3,7 @@ const { SerialPort } = require("serialport");
 const { getTimestamp } = require("./helpers/time");
 const card = require("./card");
 const { statusCodes, SIZE_SMALL, COLOR_BLACK } = require("./constants");
+const { prepareData } = require("./helpers/serial");
 
 const port = new SerialPort({
   path: process.env.SERIAL_PORT_OUT || "/dev/ttyUSB0",
@@ -47,8 +48,9 @@ port.on("data", (data) => {
 
 function init(callback) {
   const { INIT_KEY } = process.env;
+  const data = prepareData(`EF0101${INIT_KEY}`);
 
-  port.write(Buffer.from(`EF0101${INIT_KEY}`, "hex"), (err) => {
+  port.write(data, (err) => {
     if (err) {
       callback(`Failed to initialize device: ${err.message}`);
     }
