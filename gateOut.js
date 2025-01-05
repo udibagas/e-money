@@ -1,5 +1,5 @@
 require("dotenv").config();
-const { SerialPort, ReadyParser, ReadlineParser } = require("serialport");
+const { SerialPort } = require("serialport");
 const { getTimestamp } = require("./helpers/time");
 const card = require("./card");
 const { statusCodes, SIZE_SMALL, COLOR_BLACK } = require("./constants");
@@ -19,17 +19,16 @@ port.on("error", (error) => {
 port.on("open", () => {
   console.log("Serial port open. Initializing device...");
 
-  init((err) => {
+  init((err, mid) => {
     if (err) return console.error(err);
 
-    console.log("Device initialized");
-    mainLoop();
+    console.log("Device initialized", mid);
+    // mainLoop();
   });
 });
 
-const parser = port.pipe(new ReadlineParser());
-
-parser.on("data", (data) => {
+port.on("data", (data) => {
+  data = data.toString("hex");
   console.log("Data received: " + data);
 
   // const statusCode = data.slice(0, 6);
@@ -54,7 +53,9 @@ function init(callback) {
       callback(`Failed to initialize device: ${err.message}`);
     }
 
-    parser.once("data", (data) => {
+    port.once("data", (data) => {
+      data = data.toString("hex");
+      console.log("Data received: " + data);
       const statusCode = data.slice(2, 8);
       const mid = data.slice(8);
 
@@ -70,14 +71,15 @@ function init(callback) {
 function checkBalance() {
   const timestamp = getTimestamp();
 
-  port.write(`EF0102${timestamp}0010`, "hex", (err) => {
+  port.write(Buffer.from(`EF0102${timestamp}0010`, "hex"), (err) => {
     if (err) {
       return console.error(`Failed to check balance: ${err.message}`);
     }
 
-    parser.once("data", (data) => {
+    port.once("data", (data) => {
+      data = data.toString("hex");
       console.log("Data received: " + data);
-      const statusCode = data.toString().slice(0, 8);
+      const statusCode = data.slice(0, 8);
 
       if (statusCode != "00000000") {
         return console.error(statusCodes[statusCode] || "Unknown status code");
