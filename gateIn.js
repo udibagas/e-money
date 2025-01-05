@@ -14,11 +14,15 @@ function parseData(data) {
 
   // 060000000F015EB503936088500000001400004D7F
 
+  // 02 0015020000008f441e1d 03 6032984031044294 00006f54 8e e money
+  // 02 00150500000047bb9fc2 03 0145202200110508 00001194 6d flazz
+  // 02 0015030456d5e2db7580 01 6013500467325578 00000000 03 bri
+
   const cardType = data.slice(0, 2);
-  const cardUID = data.slice(2, 16);
-  const cardDataValidityFlag = data.slice(16, 18);
-  const cardNumber = data.slice(18, 34);
-  const cardBalance = data.slice(34, 42);
+  const cardUID = data.slice(2, 22);
+  const cardDataValidityFlag = data.slice(22, 24);
+  const cardNumber = data.slice(24, 40);
+  const cardBalance = data.slice(40, 48);
 
   return {
     cardType: cardTypes[cardType],
@@ -30,6 +34,7 @@ function parseData(data) {
 }
 
 // console.log(parseData("060000000F015EB503936088500000001400004D7F"));
+// console.log(parseData("020015020000008f441e1d03603298403104429400006f548e"));
 
 const port = new SerialPort({
   path: process.env.SERIAL_PORT_IN || "/dev/ttyUSB0",
@@ -70,7 +75,7 @@ port.on("data", (data) => {
   const { cardType, cardUID, cardDataValidityFlag, cardNumber, cardBalance } =
     parseData(data);
 
-  console.log("Card Type: " + cardTypes[cardType]);
+  console.log("Card Type: " + cardType);
   console.log("Card UID: " + cardUID);
   console.log("Card Data Validity Flag: " + cardDataValidityFlag);
   console.log("Card Number: " + cardNumber);
