@@ -51,7 +51,7 @@ function init(callback) {
   const data = prepareData(`EF0101${INIT_KEY}`);
   console.log("Data prepared: " + data.toString("hex"));
 
-  port.write(data, (err) => {
+  port.write(data, "hex", (err) => {
     if (err) {
       return callback(`Failed to initialize device: ${err.message}`);
     }
