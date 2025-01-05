@@ -49,7 +49,7 @@ parser.on("data", (data) => {
 function init(callback) {
   const { INIT_KEY } = process.env;
 
-  port.write(`EF0101${INIT_KEY}`, "hex", (err) => {
+  port.write(Buffer.from(`EF0101${INIT_KEY}`, "hex"), (err) => {
     if (err) {
       callback(`Failed to initialize device: ${err.message}`);
     }
