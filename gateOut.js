@@ -156,5 +156,5 @@ function mainLoop() {
 
     // setTimeout(resetDisplay, 3000);
     // card.reset();
-  }, 100);
+  }, 2000);
 }
