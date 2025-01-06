@@ -1,8 +1,8 @@
 require("dotenv").config();
 const { default: axios } = require("axios");
-const { SerialPort, ReadlineParser } = require("serialport");
+const { SerialPort } = require("serialport");
 
-const { cardTypes, VALID } = require("./constants");
+const { cardTypes, VALID, validityFlags } = require("./constants");
 
 function parseData(data) {
   // 06 00 00 00 0F 01 5E B5 03 93 60 88 50 00 00 00 14 00 00 4D 7F
@@ -28,6 +28,7 @@ function parseData(data) {
     cardType: cardTypes[cardType],
     cardUID,
     cardDataValidityFlag,
+    cardDataValidityFlagText: validityFlags[cardDataValidityFlag],
     cardNumber,
     cardBalance: parseInt(cardBalance, 16),
   };
@@ -44,9 +45,12 @@ const port = new SerialPort({
   stopBits: 1,
 });
 
-const parser = port.pipe(
-  new ReadlineParser({ includeDelimiter: false, delimiter: "\r\n" })
-);
+function reconnect() {
+  console.log("Reconnecting serial port...");
+  port.removeAllListeners();
+  if (port.isOpen) port.close();
+  port.open();
+}
 
 port.on("open", () => {
   console.log("Serial port open");
@@ -54,30 +58,27 @@ port.on("open", () => {
 
 port.on("error", (error) => {
   console.error("Serial port error", error);
-});
-
-port.on("close", () => {
-  console.log("Serial port closed");
-});
-
-port.on("disconnect", () => {
-  console.log("Serial port disconnected");
-});
-
-port.on("end", () => {
-  console.log("Serial port ended");
+  reconnect();
 });
 
 port.on("data", (data) => {
   data = data.toString("hex");
   console.log("Data received: " + data);
 
-  const { cardType, cardUID, cardDataValidityFlag, cardNumber, cardBalance } =
-    parseData(data);
+  const {
+    cardType,
+    cardUID,
+    cardDataValidityFlag,
+    cardDataValidityFlagText,
+    cardNumber,
+    cardBalance,
+  } = parseData(data);
 
   console.log("Card Type: " + cardType);
   console.log("Card UID: " + cardUID);
-  console.log("Card Data Validity Flag: " + cardDataValidityFlag);
+  console.log(
+    `Card Data Validity Flag: [${cardDataValidityFlag}] ${cardDataValidityFlagText}`
+  );
   console.log("Card Number: " + cardNumber);
   console.log("Card Balance: Rp. " + cardBalance.toLocaleString());
 });
