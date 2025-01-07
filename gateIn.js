@@ -20,7 +20,7 @@ function reconnect() {
 }
 
 port.on("open", () => {
-  console.log("Serial port open");
+  console.log("Serial port open. Listening for data...");
 });
 
 port.on("error", (error) => {
