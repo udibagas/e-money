@@ -6,7 +6,7 @@ const { statusCodes, SIZE_SMALL, COLOR_BLACK } = require("./constants");
 class Device {
   scanInterval = null;
 
-  constructor(path = "/dev/ttyUSB0", baudRate = 38400) {
+  constructor(path, baudRate = 38400) {
     this.port = new SerialPort({ path, baudRate });
     this.registerEventListeners();
   }
