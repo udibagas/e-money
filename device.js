@@ -7,8 +7,8 @@ class Device {
   scanInterval = null;
 
   constructor(path, baudRate = 38400) {
-    // this.port = new SerialPort({ path, baudRate });
-    // this.registerEventListeners();
+    this.port = new SerialPort({ path, baudRate });
+    this.registerEventListeners();
   }
 
   registerEventListeners() {
