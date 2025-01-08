@@ -7,8 +7,8 @@ class Device {
   scanInterval = null;
 
   constructor(path, baudRate = 38400) {
-    this.port = new SerialPort({ path, baudRate });
-    this.registerEventListeners();
+    // this.port = new SerialPort({ path, baudRate });
+    // this.registerEventListeners();
   }
 
   registerEventListeners() {
@@ -42,11 +42,24 @@ class Device {
   }
 
   calculateLRC(data) {
-    let lrc = 0;
+    // let lrc = 0;
 
-    for (let i = 0; i < data.length; i++) {
-      lrc ^= data.charCodeAt(i);
+    // for (let i = 0; i < data.length; i++) {
+    //   lrc ^= data.charCodeAt(i);
+    // }
+
+    // return lrc.toString(16).toUpperCase().padStart(2, "0");
+
+    let total = 0;
+
+    // Parse the hex string into bytes and sum them
+    for (let i = 0; i < data.length; i += 2) {
+      const byte = parseInt(data.substr(i, 2), 16); // Convert two hex chars to a byte
+      total += byte;
     }
+
+    // Calculate the 2's complement and keep it within 8 bits
+    const lrc = -total & 0xff;
 
     return lrc.toString(16).toUpperCase().padStart(2, "0");
   }
@@ -200,3 +213,6 @@ class Device {
 }
 
 module.exports = Device;
+
+const a = new Device("/dev/ttyUSB0");
+console.log(a.calculateLRC("EF0101"));
