@@ -186,7 +186,7 @@ class Device {
     const data = this.prepareData(`EF010902${success ? "00" : "01"}`);
     this.port.write(data, "hex", (err) => {
       if (err) {
-        return callback("Failed to buzz", err.message);
+        return callback("Failed to buzz. " + err.message);
       }
 
       const res = this.port.read();
@@ -195,9 +195,7 @@ class Device {
         return callback("Failed to buzz. No data received");
       }
 
-      const string = res.toString("hex");
-      console.log("Data received: " + string);
-      callback(null, string);
+      callback(null, res.toString("hex"));
     });
   }
 
