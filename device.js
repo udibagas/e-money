@@ -66,7 +66,7 @@ class Device {
     }
 
     const data = this.prepareData(`EF0101${INIT_KEY}`);
-    console.log("Data prepared: " + data.toString("hex"));
+    console.log("Data prepared: ", data);
 
     this.port.write(data, "hex", (err) => {
       if (err) {
