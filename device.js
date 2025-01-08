@@ -27,6 +27,10 @@ class Device {
         this.scan();
       });
     });
+
+    this.port.on("data", (data) => {
+      console.log("Data received: " + data.toString("hex"));
+    });
   }
 
   reconnect() {
@@ -69,28 +73,28 @@ class Device {
         return callback(`Failed to initialize device: ${err.message}`);
       }
 
-      let res = this.port.read();
+      // let res = this.port.read();
 
-      if (res === null) {
-        return callback("Failed to initialize device. No data received");
-      }
+      // if (res === null) {
+      //   return callback("Failed to initialize device. No data received");
+      // }
 
-      res = res.toString("hex");
-      console.log("Data received: " + res);
-      const statusCode = res.slice(2, 8);
+      // res = res.toString("hex");
+      // console.log("Data received: " + res);
+      // const statusCode = res.slice(2, 8);
 
-      if (statusCode !== "000000") {
-        return callback("Failed to initialize device. Incorrect key");
-      }
+      // if (statusCode !== "000000") {
+      //   return callback("Failed to initialize device. Incorrect key");
+      // }
 
-      const mid = res.slice(8);
-      callback(null, mid);
+      // const mid = res.slice(8);
+      callback(null, "ok");
     });
   }
 
   checkBalance(callback) {
     const timestamp = getTimestamp();
-    const data = this.prepareData(`EF0102${timestamp}0010`);
+    const data = this.prepareData(`EF0102${timestamp}0003`);
 
     this.port.write(data, "hex", (err) => {
       if (err) {
