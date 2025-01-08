@@ -189,7 +189,15 @@ class Device {
         return callback("Failed to buzz", err.message);
       }
 
-      callback(null);
+      const res = this.port.read();
+
+      if (res === null) {
+        return callback("Failed to buzz. No data received");
+      }
+
+      const string = res.toString("hex");
+      console.log("Data received: " + string);
+      callback(null, string);
     });
   }
 
